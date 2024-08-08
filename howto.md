@@ -28,10 +28,6 @@ pub enum Direction {
 ```
 Note: It's important that you set your default Up direction to a value of 0. The reason it's important to set your default Up direction to a value of 0 is so that the default Orientation and Rotation can have a zeroed value. It might make it a little inconvenient in other places in your code, but I managed to work around this requirement just fine.
 
-It's important that I mention that my code uses a Right-handed coordinate system (Y-up, X-right, Z-backward).
-
-Your coordinate system might be different, and you'll want to modify your implementation to match your coordinate system. Hopefully my explanation of the process makes it easy for you to do so.
-
 ### `Flip`
 `Flip` should be a bitmask with a bit for each axis.
 
