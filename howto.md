@@ -233,7 +233,7 @@ This code would likely be a little more difficult to write in a language that do
 
 ## Rotation Methods
 
-### Getting the Up, Down, Left, or Right  `Direction` based on the source `Direction`.
+### Getting the Up, Down, Left, or Right  `Direction` based on the target `Direction`.
 (Keep in mind that this is for my engine's coordinate system, so you'll want to figure out these values for your own engine if they don't line up with my values, but this should give you an idea of how to do it)
 
 #### Up
@@ -311,7 +311,7 @@ So anyway, the `Up` direction is the easiest since we already have the `Up` dire
 
 Next you'll want to implement the `Left` and `Right` directions.
 
-I'll just show you my code for `Left` and you can extrapolate for `Right`.
+I'll just show you my code for `Left` and you can extrapolate for `Right` (by inverting the `Direction`).
 
 ```rust
 pub const fn left(self) -> Direction {
@@ -425,9 +425,9 @@ And that's what we'll talk about next! The `reface` method on `Rotation`.
 
 `reface` is thankfully very simple. We simply use the functions we just created to line them up with the input direction.
 
-The `reface` method for `Rotation` take as input a `Direction` and spits out a new `Direction` which has been Rotated.
+The `reface` method for `Rotation` takes as input a `Direction` and spits out a new `Direction` which has been Rotated.
 
-Here's what mine looks like:
+Here's what mine looks like: (You could also generate a lookup table)
 
 ```rust
 /// Rotates direction.
@@ -593,7 +593,7 @@ pub const fn invert(self) -> Self {
 
 ### Cycle rotations
 
-If you're like me, you may have noticed that you could pack a `Rotation` into a single byte then decontruct it when you need to. This is what I did in my engine because it's an inexpensive operation to extract the `up` and `angle` from a byte. I'll leave that as an exercise to the reader. But in case you decide to pack `Rotation` into a single byte, you can implement this method:
+If you're like me, you may have noticed that you could pack a `Rotation` into a single byte then decontruct it when you need to. This is what I did in my engine because it's an inexpensive operation to extract the `up` and `angle` from a byte. I'll leave that as an exercise to the reader. But in case you decide to pack `Rotation` into a single byte, you can implement the cycle method, which allows you to cycle through all 24 rotations sequentially:
 
 ```rust
 pub const fn cycle(self, offset: i32) -> Rotation {
@@ -786,7 +786,7 @@ pub const fn reface(self, face: Direction) -> Direction {
 
 ### Source Face
 
-Getting the source face of an `Orientation` is easy. We just flip the face.
+Getting the source face of an `Orientation` is easy. We do the same thing as `reface` except we use the `source_face` method for `Rotation` instead of `reface`.
 It's similar to the `reface` method.
 
 ```rust
@@ -813,7 +813,7 @@ pub const fn reorient(self, orientation: Orientation) -> Self {
     let flip = self.flip.flip(orientation.flip);
     let flipup = reup.flip(flip);
     let flipfwd = refwd.flip(flip);
-    let Some(rot) =  else {
+    let Some(rot) = Rotation::from_up_and_forward(flipup, flipfwd) else {
         // This is unreachable because `flipup` and `flipfwd` will always be orthongal to each other.
         unreachable!()
     };
@@ -852,7 +852,7 @@ Here's what that code looks like
 ```rust
 /// If you're using this method to transform mesh vertices, make sure that you 
 /// reverse your indices if the face will be flipped (for backface culling). To
-/// determine if your indices need to be inverted, simply XOR each axis of the Orientation's Flip.
+/// determine if your indices need to be reversed, simply XOR each axis of the Orientation's Flip.
 /// This method will rotate and then flip the coordinate.
 pub fn transform<T: Copy + std::ops::Neg<Output = T>, C: Into<(T, T, T)> + From<(T, T, T)>>(self, point: C) -> C {
     let rotated = self.rotation.rotate(point);
@@ -862,7 +862,7 @@ pub fn transform<T: Copy + std::ops::Neg<Output = T>, C: Into<(T, T, T)> + From<
 
 ## Optional: Generating tables for remapping face coordinates
 
-There are two methods that you can implement for `Orientation` that are incredibly useful if you're creative enough to know how to use them. These methods are called `map_face_coord` and `source_face_coord`. I use the `source_face_coord` to determine where a position on the unoriented face is on the oriented face. If that's hard to understand, I apologize, it's hard to explain. Being able to determine the `source_face_coord` is useful for face occlusion. In my engine, I have an `Occluder` type for face occlusion (all 6 faces can be occluded by a neighboring voxel). But here's the thing, with occlusion you don't want to make it so that the sides of stair blocks are meshed. You want to be able to occlude those as well. So I created occlusion masks of various sizes that you can apply to the faces of your block. There's the `Occluder`, and the `Occludee`. The `Occluder` occludes, and the `Occludee` is occluded by the `Occluder`. The `Occluder` must completely cover the `Occludee` in order for the `Occludee` to be considered occluded. That functionality is a lot more complicated to implement, and I may talk about it in another writeup, but these methods should give you the building blocks to help you with implementing your own face occluders, which will be necessary if you want blocks that aren't cube shaped.
+There are two methods that you can implement for `Orientation` that are incredibly useful if you're creative enough to know how to use them. These methods are called `map_face_coord` and `source_face_coord`. I use the `source_face_coord` to determine where a position on the unoriented face is on the oriented face. If that's hard to understand, I apologize, it's hard to explain. Being able to determine the `source_face_coord` is useful for face occlusion. In my engine, I have an `Occluder` type for face occlusion (all 6 faces can be occluded by a neighboring voxel). But here's the thing, with occlusion you don't want to make it so that the sides of stair blocks are meshed if they are occluded. You want to be able to occlude those as well. So I created occlusion masks of various sizes that you can apply to the faces of your block. There's the `Occluder`, and the `Occludee`. The `Occluder` occludes, and the `Occludee` is occluded by the `Occluder`. The `Occluder` must completely cover the `Occludee` in order for the `Occludee` to be considered occluded. That functionality is a lot more complicated to implement, and I may talk about it in another writeup, but these methods should give you the building blocks to help you with implementing your own face occluders, which will be necessary if you want blocks that aren't cube shaped.
 
 ### Map Face Coord
 
@@ -906,8 +906,8 @@ And you'll need methods for `AxisMap` and `CoordMap` that map coordinates.
 
 ```rust
 impl AxisMap {
-    pub fn map<T: Copy + std::ops::Neg<Output = T>, C: Into<(T, T)>>(self, coord: C) -> T {
-        let (x, y): (T, T) = coord.into();
+    pub fn map<T: Copy + std::ops::Neg<Output = T>, C: Into<(T, T)>>(self, coord: C) -> T {//           He's crying because of how hard this code was to write.
+        let (x, y): (T,T) = coord.into();
         match self {
             AxisMap::PosX => x,
             AxisMap::PosY => y,
