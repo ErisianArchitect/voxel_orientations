@@ -8,4 +8,6 @@ Here are some videos of orientations being oriented:
 
 ### X-Axis
 
-![x_axis_rotation](media/x_axis_rotation.mp4)
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/fRf-suuhGxs" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<!-- ![x_axis_rotation](https://youtu.be/fRf-suuhGxs) -->
