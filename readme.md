@@ -8,9 +8,4 @@ Here are some videos of orientations being oriented:
 
 ### X-Axis
 
-<video width="1280" height="720" controls>
-  <source src="media/x_axis_rotation.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
-
 ![x_axis_rotation](media/x_axis_rotation.mp4)
