@@ -10,4 +10,8 @@ Here are some videos of orientations being oriented:
 https://github.com/user-attachments/assets/e996879d-c822-47cd-880f-759b920a9bde
 ### Y-Axis
 https://github.com/user-attachments/assets/223d1cf9-9239-4eec-a4a3-b249de2b542b
+### Z-Axis
+https://github.com/user-attachments/assets/9e28f333-8647-42bd-afb4-99da1aa50472
 
+### And here's what flipping looks like
+https://github.com/user-attachments/assets/5418b083-0979-48b7-a8f1-e47d929b24c4
