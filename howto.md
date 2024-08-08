@@ -158,7 +158,7 @@ I'm assuming that you've already implemented a way to query the individual bits 
 
 ### Checking if your mesh indices need to be reversed
 
-When you get to the stage of your implmentation where it's time to apply your orientation code to a block's mesh, you'll need a function/method to determine whether your indices need to be reversed. The easiest way is to XOR each of the axis bits in `Flip`. Here's what that looks like in my project:
+When you get to the stage of your implementation where it's time to apply your orientation code to a block's mesh, you'll need a function/method to determine whether your indices need to be reversed. The easiest way is to XOR each of the axis bits in `Flip`. Here's what that looks like in my project:
 
 ```rust
 pub const fn reverse_indices(self) -> bool {
