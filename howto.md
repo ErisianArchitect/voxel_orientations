@@ -303,7 +303,7 @@ This is where things start getting a bit complicated. You see, there are two opt
 
 You really only need to implement `Up`, `Left`, and `Forward`. The other three can be extrapolated from the first three. I personally generated code for it, but you can also just retrieve `Up`, `Left`, and `Forward` and invert them. It's likely more optimized for you to generate the code for each.
 
-So anyway, the `Up` direction is the easiest since we already have the `Up` direction specified in the `Rotation` type. Therefore, you can extrapolate the `Down` direction from the `Up` directin and optionally generate optimized code for it.
+So anyway, the `Up` direction is the easiest since we already have the `Up` direction specified in the `Rotation` type. Therefore, you can extrapolate the `Down` direction from the `Up` direction and optionally generate optimized code for it.
 
 Next you'll want to implement the `Left` and `Right` directions.
 
