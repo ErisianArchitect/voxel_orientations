@@ -28,7 +28,7 @@ pub enum Direction {
 ```
 Note: It's important that you set your default Up direction to a value of 0. The reason it's important to set your default Up direction to a value of 0 is so that the default Orientation and Rotation can have a zeroed value. It might make it a little inconvenient in other places in your code, but I managed to work around this requirement just fine.
 
-It's important that I mention that my code uses Right-handed coordinate system (Y-up, X-right, Z-backward).
+It's important that I mention that my code uses a Right-handed coordinate system (Y-up, X-right, Z-backward).
 
 Your coordinate system might be different, and you'll want to modify your implementation to match your coordinate system. Hopefully my explanation of the process makes it easy for you to do so.
 
@@ -61,7 +61,7 @@ For my engine, the angles are:
 * `0`: Up
 * `1`: Right
 * `2`: Down
-* `3`: Right
+* `3`: Left
 
 Rust:
 ```rust
@@ -96,7 +96,7 @@ You can also pack your Rotation struct into a single byte where the first 2 bits
 # Construction
 For your `Rotation` type, you'll need a `from_up_and_forward` constructor that allows you to attempt to create a `Rotation` from an up and forward direction. If the forward direction is either the up direction or the inverse of the up direction, you should consider that an error and handle it as such.
 
-I'll show you my implementation of from_up_and_forward, but keep in mind that this is for the coordinate system that my engine uses. You'll want to adapt it for your coordinate system and whatever you consider to be the `Up`, `Right`, `Down` and `Left` for each `Direction`/`Face`.
+I'll show you my implementation of `from_up_and_forward`, but keep in mind that this is for the coordinate system that my engine uses. You'll want to adapt it for your coordinate system and whatever you consider to be the `Up`, `Right`, `Down` and `Left` for each `Direction`/`Face`.
 ```rust
 pub const fn from_up_and_forward(up: Direction, forward: Direction) -> Option<Rotation> {
     Some(Rotation::new(up, match up {
@@ -160,12 +160,12 @@ I'm assuming that you've already implemented a way to query the individual bits 
 
 ## `Flip` Methods
 
-### Checking if your mesh indices need to be inverted
+### Checking if your mesh indices need to be reversed
 
-When you get to the stage of your implmentation where it's time to apply your orientation code to a block's mesh, you'll need a function/method to determine that. The easiest way is to XOR each of the axis bits in `Flip`. Here's what that looks like in my project:
+When you get to the stage of your implmentation where it's time to apply your orientation code to a block's mesh, you'll need a function/method to determine whether your indices need to be reversed. The easiest way is to XOR each of the axis bits in `Flip`. Here's what that looks like in my project:
 
 ```rust
-pub const fn invert_indices(self) -> bool {
+pub const fn reverse_indices(self) -> bool {
     // where self is of type Flip
     self.x() ^ self.y() ^ self.z()
 }
