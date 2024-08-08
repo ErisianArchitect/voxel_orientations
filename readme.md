@@ -7,11 +7,7 @@ I also wanted to be able to orient orientations, which means that if I have an o
 Here are some videos of orientations being oriented:
 
 ### X-Axis
-
-
-
 https://github.com/user-attachments/assets/e996879d-c822-47cd-880f-759b920a9bde
+### Y-Axis
+https://github.com/user-attachments/assets/223d1cf9-9239-4eec-a4a3-b249de2b542b
 
-
-
-<!-- ![x_axis_rotation](https://youtu.be/fRf-suuhGxs) -->
