@@ -4,6 +4,8 @@ So I set out to find a way to implement these orientations for my game. The way 
 
 I also wanted to be able to orient orientations, which means that if I have an orientation that rotates and flips the block/mesh, then I can apply it to another orientation to get a new orientation that is distinct from the original two.
 
+[Explanation](howto.md)
+
 Here are some videos of orientations being oriented:
 
 ### X-Axis
